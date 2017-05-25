@@ -19,13 +19,12 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_eating" />
+         />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/ivFood"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_food" />
+        android:scaleType="fitCenter" />
 </RelativeLayout>
