@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import java.io.IOException;
@@ -27,26 +29,150 @@ public class WelcomeActivity extends AppCompatActivity {
         ivFood = (GifImageView) findViewById(R.id.ivFood);
 
         try {
-            final GifDrawable gifFromResourceMons = new GifDrawable(getResources(), R.drawable.greenbar);
-            ivMonster.setImageDrawable(gifFromResourceMons);
+            final GifDrawable gifIdle= new GifDrawable(getResources(), R.drawable.idle);
+            final GifDrawable gifrecognized = new GifDrawable(getResources(), R.drawable.recognized);
+            final GifDrawable gifFood_a = new GifDrawable(getResources(), R.drawable.food_up_a);
+            final GifDrawable gifFood_b = new GifDrawable(getResources(), R.drawable.food_up_b);
+            final GifDrawable gifchewing = new GifDrawable(getResources(), R.drawable.chewing2);
+            final GifDrawable gifmagic_a = new GifDrawable(getResources(), R.drawable.magic_a);
+            final GifDrawable gifmagic_b = new GifDrawable(getResources(), R.drawable.magic_b);
+            final GifDrawable gifStrawberry = new GifDrawable(getResources(), R.drawable.strawerry);
 
-            final GifDrawable gifFromResourceFood = new GifDrawable(getResources(), R.drawable.redbar);
-            ivFood.setImageDrawable(gifFromResourceFood);
+           // gifFood_b.setLoopCount(1);
+            //gifFromResourceMons.setLoopCount(1);
+           // gifFromResourceFood.setLoopCount(1);
+           // gifChwing.setLoopCount(1);
+           // gifHappy.setLoopCount(1);
+           // float speed=0.5f;
+            //gifHappy.setSpeed(speed);
+            //gifChwing.setSpeed(speed);
+            //gifFromResourceFood.setSpeed(speed);
+
+            ivMonster.setImageDrawable(gifIdle);
+            //ivFood.setImageDrawable(gifFromResourceFood);
+
+
+            Log.e("Mir happy:",String.valueOf(gifIdle.getDuration()));
+            Log.e("Mir chew:",String.valueOf(gifIdle.getDuration()));
+            Log.e("Mir food:",String.valueOf(gifIdle.getDuration()));
 
             //gifFromResource.stop();
             // gifFromResourceMons.setLoopCount(1);
-            gifFromResourceMons.addAnimationListener(new AnimationListener() {
+            gifIdle.addAnimationListener(new AnimationListener() {
                 @Override
                 public void onAnimationCompleted(int loopNumber) {
-                    //Toast.makeText(WelcomeActivity.this,"sada",Toast.LENGTH_LONG).show();
+                    Log.e("hel","1");
+
+                    //if(loopNumber>5){
+                        gifIdle.stop();
+                        gifIdle.reset();
+                        ivMonster.setImageDrawable(gifrecognized);
+                  //  }
                 }
+
             });
+            gifrecognized.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    Log.e("hel","2");
+                    gifrecognized.stop();
+                    gifrecognized.reset();
+
+                    ivMonster.setImageDrawable(gifFood_a);
+                    gifFood_b.reset();
+                    ivFood.setImageDrawable(gifFood_b);
+                    ivFood.setVisibility(View.VISIBLE);
+                }
+
+            });
+            gifFood_a.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    Log.e("hel","3");
+                    //gifFood_b.stop();
+                   // gifFood_b.reset();
+                    ivMonster.setImageDrawable(gifchewing);
+
+
+                }
+
+            });
+            gifFood_b.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    Log.e("hel:","4");
+                   // gifFood_b.reset();
+                    gifFood_b.stop();
+                    ivFood.setVisibility(View.GONE);
+                }
+
+            });
+            gifchewing.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    Log.e("hel","5");
+                    /*if(last_one_loop<last_one_loopMax)
+                        last_one_loop++;
+                    else {*/
+                        last_one_loop = 0;
+                        gifchewing.stop();
+                        gifchewing.reset();
+                        ivMonster.setImageDrawable(gifmagic_a);
+                        gifmagic_b.reset();
+                        ivFood.setImageDrawable(gifmagic_b);
+                        ivFood.setVisibility(View.VISIBLE);
+                    }
+                //}
+
+            });
+            gifmagic_a.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    Log.e("hel","6");
+                    gifmagic_a.stop();
+                    gifmagic_a.reset();
+                    ivMonster.setImageDrawable(gifStrawberry);
+                }
+
+            });
+            gifmagic_b.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    Log.e("hel","7");
+                    gifmagic_b.stop();
+                    gifmagic_b.reset();
+                    ivFood.setVisibility(View.GONE);
+                   // ivMonster.setImageDrawable(gifStrawberry);
+                }
+
+            });
+            gifStrawberry.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    Log.e("hel: "+String.valueOf(loopNumber),"8");
+                    if(last_one_loop<last_one_loopMax)
+                        last_one_loop++;
+                    else {
+                        last_one_loop=0;
+                        gifStrawberry.stop();
+                        gifStrawberry.reset();
+                        ivMonster.setImageDrawable(gifIdle);
+                    }
+                }
+
+            });
+
             //  gifFromResourceFood.setLoopCount(1);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+int last_one_loop=0;
+    int last_one_loopMax=1;
+
+    int chewingloop=0;
 
 
     public void playAgain(View view) {
@@ -56,20 +182,13 @@ public class WelcomeActivity extends AppCompatActivity {
     /// method that used to play sound
     MediaPlayer mp;
     public void playBeep(String soundFile) {
+        mp = new MediaPlayer();
         try {
-            if (mp.isPlaying()) {
-                mp.stop();
-                mp.release();
-                mp = new MediaPlayer();
-            }
 
             AssetFileDescriptor descriptor = getAssets().openFd(soundFile);
             mp.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
             descriptor.close();
-
             mp.prepare();
-            mp.setVolume(1f, 1f);
-            mp.setLooping(true);
             mp.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,4 +201,85 @@ public class WelcomeActivity extends AppCompatActivity {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
+
+
+/*
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_welcome);
+        ivMonster = (GifImageView) findViewById(R.id.ivMonster);
+        ivFood = (GifImageView) findViewById(R.id.ivFood);
+
+        try {
+            final GifDrawable gifFromResourceMons = new GifDrawable(getResources(), R.drawable.ic_eating);
+            final GifDrawable gifFromResourceFood = new GifDrawable(getResources(), R.drawable.ic_food);
+            final GifDrawable gifChwing = new GifDrawable(getResources(), R.drawable.chewing);
+            final GifDrawable gifHappy = new GifDrawable(getResources(), R.drawable.happy);
+
+            //gifFromResourceMons.setLoopCount(1);
+            // gifFromResourceFood.setLoopCount(1);
+            // gifChwing.setLoopCount(1);
+            // gifHappy.setLoopCount(1);
+
+
+            ivMonster.setImageDrawable(gifFromResourceMons);
+            ivFood.setImageDrawable(gifFromResourceFood);
+
+            //gifFromResource.stop();
+            // gifFromResourceMons.setLoopCount(1);
+            gifFromResourceMons.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    //Toast.makeText(WelcomeActivity.this,"sada",Toast.LENGTH_LONG).show();
+                    gifFromResourceMons.stop();
+                    ivMonster.setImageDrawable(gifChwing);
+                    gifChwing.start();
+                    gifFromResourceFood.stop();
+                    ivFood.setVisibility(View.INVISIBLE);
+
+                    Log.e("hel","1");
+
+                }
+            });
+            gifFromResourceFood.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    //Toast.makeText(WelcomeActivity.this,"sada",Toast.LENGTH_LONG).show();
+                    Log.e("hel","2");
+                }
+
+            });
+            gifChwing.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    //Toast.makeText(WelcomeActivity.this,"sada",Toast.LENGTH_LONG).show();
+                    gifChwing.stop();
+                    ivMonster.setImageDrawable(gifHappy);
+                    gifHappy.start();
+                    Log.e("hel","3");
+                }
+            });
+            gifHappy.addAnimationListener(new AnimationListener() {
+                @Override
+                public void onAnimationCompleted(int loopNumber) {
+                    //Toast.makeText(WelcomeActivity.this,"sada",Toast.LENGTH_LONG).show();
+                    gifHappy.stop();
+                    ivMonster.setImageDrawable(gifFromResourceMons);
+                    gifFromResourceMons.start();
+                    ivFood.setImageDrawable(gifFromResourceFood);
+                    gifFromResourceFood.start();
+                    ivFood.setVisibility(View.VISIBLE);
+                    Log.e("hel","4");
+                }
+            });
+            //  gifFromResourceFood.setLoopCount(1);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+
+
 }
