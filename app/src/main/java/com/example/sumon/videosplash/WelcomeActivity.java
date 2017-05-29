@@ -2,12 +2,17 @@ package com.example.sumon.videosplash;
 
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -20,13 +25,48 @@ public class WelcomeActivity extends AppCompatActivity {
     String sound_1 = "gif_eating.mp3";
     String sound_2 = "gif_first_jingle.mp3";
     String sound_3 = "gif_got_a_grass.mp3";
+    private final SensorEventListener LightSensorListener
+            = new SensorEventListener(){
 
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if(event.sensor.getType() == Sensor.TYPE_LIGHT){
+                textLIGHT_reading.setText("LIGHT: " + event.values[0]);
+            }
+        }
+
+    };
+
+
+    TextView textLIGHT_reading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         ivMonster = (GifImageView) findViewById(R.id.ivMonster);
         ivFood = (GifImageView) findViewById(R.id.ivFood);
+
+        textLIGHT_reading=(TextView) findViewById(R.id.textLIGHT_reading);
+
+        SensorManager mySensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+
+        Sensor LightSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        if(LightSensor != null){
+            // textLIGHT_available.setText("Sensor.TYPE_LIGHT Available");
+            mySensorManager.registerListener(
+                    LightSensorListener,
+                    LightSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+
+        }else{
+            // textLIGHT_available.setText("Sensor.TYPE_LIGHT NOT Available");
+        }
 
         try {
             final GifDrawable gifIdle= new GifDrawable(getResources(), R.drawable.idle);

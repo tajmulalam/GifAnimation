@@ -13,6 +13,16 @@
         android:onClick="playAgain"
         android:text="Play Again" />
 
+    <TextView
+        android:id="@+id/textLIGHT_reading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textSize="30sp"
+        android:layout_centerInParent="true"
+        android:onClick="playAgain"
+        android:text="sensor" />
+
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/ivMonster"
         android:layout_width="wrap_content"
